@@ -1,0 +1,20 @@
+List<Map<String, String>> images = [
+      {"image": "assets/1.jpg", "name": "FRONT FACADE"},
+      {"image": "assets/2.jpg", "name": "'THE ONE'"},
+      {"image": "assets/3.jpg", "name": "LOBBY"},
+      {"image": "assets/4.jpg", "name": "WAITING AREA"},
+      {"image": "assets/5.jpg", "name": "THE ONE"},
+      {"image": "assets/6.jpg", "name": "PASSAGE"},
+      {"image": "assets/7.jpg", "name": "CINEMA"},
+      {"image": "assets/8.jpg", "name": "KIDS PLAY ROOM"},
+      {"image": "assets/9.jpg", "name": "RECREATIONAL ZONE"},
+      {"image": "assets/10.jpg", "name": "WAITING AREA"},
+      {"image": "assets/11.jpg", "name": "KIDS PLAY ROOM"},
+      {"image": "assets/12.jpg", "name": "PASSAGE"},
+      {"image": "assets/13.jpg", "name": "ENTERANCE"},
+      {"image": "assets/14.jpg", "name": "LAWN"},
+      {"image": "assets/15.jpg", "name": "POOL ROOM"},
+      {"image": "assets/16.jpg", "name": "ENTERANCE"},
+      {"image": "assets/17.jpg", "name": "JOGGING TRACK"},
+           
+    ];

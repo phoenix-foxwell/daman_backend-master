@@ -1,0 +1,251 @@
+<!doctype html>
+<!--[if lt IE 7 ]> <html lang="en" class="ie6"> <![endif]-->
+<!--[if IE 7 ]>    <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8 ]>    <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9 ]>    <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en"> <!--<![endif]-->
+
+<head>
+    <meta name="viewport" content="width = 1050, user-scalable = no" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <script type="text/javascript" src="../turnjs/jquery.min.1.7.js"></script>
+    <script type="text/javascript" src="../turnjs/modernizr.2.5.3.min.js"></script>
+    <style type="text/css">
+        .nav-header {
+            padding: 5px;
+            color: #4b646f;
+            background: #1a2226;
+        }
+
+        .nav-link {
+            padding: 5px;
+            color: #b8c7ce
+        }
+
+        .nav-link>a {
+            text-decoration: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus,
+        .nav-link.active {
+            color: #fff;
+            background: #1e282c;
+            border-left-color: #FFF
+        }
+
+        .full_cover_orange {
+            background: url(../bg.jpg) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+        }
+
+        .flipbook {
+            margin: 0 0 0 115px;
+        }
+    </style>
+</head>
+
+<body class="full_cover_orange" style="overflow: hidden;">
+
+    <div style="background: #222d32; min-width:110px; width: 110px; max-width: 110px; min-height: 100%; height: 100%; max-height: 100%; text-align: center; display: inline; position:fixed; top:0; left:0; z-index:99;"
+        class="mobile_hide">
+        <ul style="display: inline; text-decoration: none; margin: 0; padding: 0; height: 100%; min-height: 1005;">
+            <li class="nav-header">
+                Starters
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-3" href="javascript:custom_goto_page(9);">Chicken</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-6" href="javascript:custom_goto_page(12);">Sea Food</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-6" href="javascript:custom_goto_page(26);">Vegetarian</a>
+            </li>
+            <li class="nav-header">
+                Main Course
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-3" href="javascript:custom_goto_page(14);">Chicken</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-4" href="javascript:custom_goto_page(16);">Mutton</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-6" href="javascript:custom_goto_page(28);">Vegetarian</a>
+            </li>
+            <li class="nav-header">
+                Desserts
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-3" href="javascript:custom_goto_page(22);">Sweets</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-4" href="javascript:custom_goto_page(24);">Ice-Cream</a>
+            </li>
+            <li class="nav-header">
+                Extra
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-6" href="javascript:custom_goto_page(3);">Juices</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-6" href="javascript:custom_goto_page(5);">Mocktails</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-6" href="javascript:custom_goto_page(7);">Milk Shakes</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-3" href="javascript:custom_goto_page(9);">Soups/Salads</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-4" href="javascript:custom_goto_page(20);">Roti/Daal</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-3" href="javascript:custom_goto_page(18);">Rice</a>
+            </li>
+            <li class="nav-link">
+                <a id="nav-link-id-4" href="javascript:custom_goto_page(24);">Counters</a>
+            </li>
+
+            <li class="nav-link" style="position: absolute; bottom: 0; width: 90%;">
+                <a href="http://thedamanclub.s3-website.ap-south-1.amazonaws.com/#/"><span
+                        class="fa fa-home"></span>&nbsp;Home</a>
+            </li>
+
+        </ul>
+    </div>
+
+    <div class="flipbook-viewport">
+        <div class="container">
+            <div class="col-xs-12">
+                <div class="flipbook">
+                    <!--<div ignore="1" class="tabs"><div class="left">  </div> <div class="right"> </div></div>-->
+                    <div id="page1" class="hard" style="background-image:url(../menu/menu11.jpg)"></div>
+                    <div id="page1" class="hard" style="background-image:url(../menu/menuin1.jpg)"></div>
+                    <div id="page2" class="page" style="background-image:url(../menu/menuin01.jpg)"></div>
+                    <div id="page3" class="page" style="background-image:url(../menu/menuin02.jpg)"></div>
+                    <div id="page4" class="page" style="background-image:url(../menu/menuin03.jpg)"></div>
+                    <div id="page5" class="page" style="background-image:url(../menu/menuin04.jpg)"></div>
+                    <div id="page6" class="page" style="background-image:url(../menu/menuin05.jpg)"></div>
+                    <div id="page7" class="page" style="background-image:url(../menu/menuin06.jpg)"></div>
+                    <div id="page8" class="page" style="background-image:url(../menu/menuin07.jpg)"></div>
+                    <div id="page9" class="page" style="background-image:url(../menu/menuin08.jpg)"></div>
+                    <div id="page10" class="page" style="background-image:url(../menu/menuin09.jpg)"></div>
+                    <div id="page11" class="page" style="background-image:url(../menu/menuin10.jpg)"></div>
+                    <div id="page12" class="page" style="background-image:url(../menu/menuin11.jpg)"></div>
+                    <div id="page13" class="page" style="background-image:url(../menu/menuin12.jpg)"></div>
+                    <div id="page14" class="page" style="background-image:url(../menu/menuin13.jpg)"></div>
+                    <div id="page15" class="page" style="background-image:url(../menu/menuin14.jpg)"></div>
+                    <div id="page16" class="page" style="background-image:url(../menu/menuin15.jpg)"></div>
+                    <div id="page17" class="page" style="background-image:url(../menu/menuin16.jpg)"></div>
+                    <div id="page18" class="page" style="background-image:url(../menu/menuin17.jpg)"></div>
+                    <div id="page19" class="page" style="background-image:url(../menu/menuin18.jpg)"></div>
+                    <div id="page20" class="page" style="background-image:url(../menu/menuin19.jpg)"></div>
+                    <div id="page21" class="page" style="background-image:url(../menu/menuin20.jpg)"></div>
+                    <div id="page22" class="page" style="background-image:url(../menu/menuin21.jpg)"></div>
+                    <div id="page23" class="page" style="background-image:url(../menu/menuin22.jpg)"></div>
+                    <div id="page24" class="page" style="background-image:url(../menu/menuin23.jpg)"></div>
+                    <div id="page25" class="page" style="background-image:url(../menu/menuin24.jpg)"></div>
+                    <div id="page26" class="page" style="background-image:url(../menu/menuin25.jpg)"></div>
+                    <div id="page27" class="page" style="background-image:url(../menu/menuin26.jpg)"></div>
+                    <div id="page28" class="hard" style="background-image:url(../menu/menuin27.jpg)"></div>
+                    <div id="page30" class="hard" style="background-image:url(../menu/menu111.jpg)"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        function loadApp() {
+
+            // Create the flipbook
+
+            $('.flipbook').turn({
+                // Width
+
+                width: 922,
+
+                // Height
+
+                height: 600,
+
+                // Elevation
+
+                elevation: 50,
+
+                // Enable gradients
+
+                gradients: true,
+
+                // Auto center this flipbook
+
+                autoCenter: true
+
+            });
+        }
+
+        $(".flipbook").bind("turned", function (event, page, view) {
+
+            var tabs = { 2: '| Starter |', 4: '| Juices |', 6: '| Salads |', 8: '| Rice |', 10: '| Desert |', 12: '| Tandoor |', 1: '| Mexican |', 3: '| Chinese |', 5: '| Italian |' },
+                left = [],
+                right = [],
+                book = $('.flipbook'),
+                actualPage = book.turn('page'),
+                view = book.turn('view');
+
+            for (var page in tabs) {
+                var isHere = $.inArray(parseInt(page, 10), view) != -1;
+
+                if (page > actualPage && !isHere) {
+                    right.push('<a href="javascript:custom_goto_page(' + page + ');">' + tabs[page] + '</a>');
+                }
+                else {
+                    if (isHere) {
+                        if (page % 2 === 0) {
+                            left.push('<a href="javascript:custom_goto_page(' + page + ');" class="on">' + tabs[page] + '</a>');
+                        }
+                        else {
+                            right.push('<a href="javascript:custom_goto_page(' + page + ');" class="on">' + tabs[page] + '</a>');
+                        }
+                    }
+                    else {
+                        left.push('<a href="javascript:custom_goto_page(' + page + ');">' + tabs[page] + '</a>');
+                    }
+                }
+            }
+
+            $('.flipbook .tabs .left').html(left.join(''));
+            $('.flipbook .tabs .right').html(right.join(''));
+
+        });
+
+        function custom_goto_page(page) {
+            $(".nav-link").removeClass('active');
+            $(".flipbook").turn("page", page);
+            $("#nav-link-id-" + page).parent().addClass('active');
+
+        }
+
+        // Load the HTML4 version if there's not CSS transform
+
+        yepnope({
+            test: Modernizr.csstransforms,
+            yep: ['../turnjs/lib/turn.min.js'],
+            nope: ['../turnjs/lib/turn.html4.min.js'],
+            both: ['../turnjs/css/basic.css'],
+            complete: loadApp
+        });
+
+    </script>
+
+</body>
+
+</html>
