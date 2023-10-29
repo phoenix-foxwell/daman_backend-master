@@ -23,16 +23,19 @@ class TableReservationController {
               message: "Already user is added.",
             });
           } else {
-            await table_reservation.create(req.body).then(async (res_user) => {
-              return res.status(200).json({
-                status: false,
-                message: "Table Reservation added.",
+            console.log(req.body);
+            const data = await table_reservation
+              .create(req.body)
+              .then(async (res_user) => {
+                return res.status(200).json({
+                  status: false,
+                  message: "Table Reservation added.",
+                });
               });
-            });
+            console.log(data);
           }
         });
     } catch (error) {
-      console.log(error);
       return res.status(200).json({
         status: false,
         message: "Opps something went wrong.",

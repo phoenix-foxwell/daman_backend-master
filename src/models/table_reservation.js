@@ -23,15 +23,25 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         defaultValue: "0",
       },
+      type: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      status: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       visitdate: {
         type: "DATE",
         allowNull: false,
-        default: Sequelize.literal("GETDATE"),
+        // default: Sequelize.literal("GETDATE"),
       },
       visittime: {
-        type: "TIME",
+        type: "Time",
         allowNull: false,
-        defaultValue: Sequelize.literal("CURRENT_TIME"),
+        // defaultValue: Sequelize.literal("CURRENT_TIME"),
       },
       created_at: {
         type: "TIMESTAMP",
