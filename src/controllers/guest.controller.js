@@ -35,7 +35,7 @@ class GuestsController {
       console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
         data: error,
       });
     }
@@ -68,7 +68,7 @@ class GuestsController {
       console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
         data: error,
       });
     }
@@ -100,7 +100,7 @@ class GuestsController {
           } else {
             return res.status(200).json({
               status: false,
-              message: "Opps something went wrong.",
+              message: "Oops something went wrong.",
             });
           }
         });
@@ -108,7 +108,7 @@ class GuestsController {
       console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
         data: error,
       });
     }
@@ -144,7 +144,7 @@ class GuestsController {
       console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
         data: error,
       });
     }

@@ -8,6 +8,12 @@ var moment = require("moment");
 //TABLES DECLARATION
 const table_reservation = db.table_reservation;
 
+// 1 resturent
+// 2 swimming pool
+// 3 theater
+// 4 pool /snooker table
+// 5 kids room
+
 //USER CONTROLLER
 class TableReservationController {
   add_table_reservation = async (req, res) => {
@@ -27,18 +33,19 @@ class TableReservationController {
             const data = await table_reservation
               .create(req.body)
               .then(async (res_user) => {
+                console.log(res_user);
                 return res.status(200).json({
                   status: false,
                   message: "Table Reservation added.",
                 });
               });
-            console.log(data);
+            // console.log(data);
           }
         });
     } catch (error) {
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
         data: error,
       });
     }
@@ -46,10 +53,20 @@ class TableReservationController {
 
   get_table_reservation_list = async (req, res) => {
     try {
-      // let visitdate=req.body.visitdate?req.body.visitdate:moment().format("YYYY-MM-DD");
+      const query = {
+        type: req.body.type,
+      };
+      if (!(req.body.user_id == null || req.body.user_id == undefined)) {
+        query["user_id"] = req.body.user_id;
+      }
+
       await table_reservation
         .findAll({
-          where: { user_id: req.body.user_id },
+          where: query,
+          // where: {
+          //   user_id: req.body.user_id,
+          //   type: req.body.type,
+          // },
           order: [["visitdate", "DESC"]],
         })
         .then(async (res_user) => {
@@ -71,7 +88,7 @@ class TableReservationController {
       console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
         data: error,
       });
     }
@@ -103,7 +120,7 @@ class TableReservationController {
           } else {
             return res.status(200).json({
               status: false,
-              message: "Opps something went wrong.",
+              message: "Oops something went wrong.",
             });
           }
         });
@@ -111,7 +128,7 @@ class TableReservationController {
       console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
         data: error,
       });
     }
@@ -147,11 +164,38 @@ class TableReservationController {
       console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
+        data: error,
+      });
+    }
+  };
+
+  update_table_reservation_status = async (req, res) => {
+    try {
+      let data = req.body;
+      await table_reservation
+        .update({ status: data.status }, { where: { id: data.id }, limit: 1 })
+        .then(async (resp) => {
+          if (resp) {
+            return res.status(200).json({
+              status: true,
+              message: "Item Updated found.",
+              data: resp,
+            });
+          } else {
+            return res.status(200).json({
+              status: false,
+              message: "Items not found.",
+            });
+          }
+        });
+    } catch (error) {
+      return res.status(200).json({
+        status: false,
+        message: "Oops something went wrong.",
         data: error,
       });
     }
   };
 }
-
 module.exports = new TableReservationController();

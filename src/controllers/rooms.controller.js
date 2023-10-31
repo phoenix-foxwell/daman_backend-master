@@ -78,7 +78,7 @@ class RoomsController {
       console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
         data: error,
       });
     }
@@ -140,7 +140,7 @@ class RoomsController {
       console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
         data: error,
       });
     }
@@ -172,7 +172,7 @@ class RoomsController {
       console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
         data: error,
       });
     }
@@ -200,10 +200,37 @@ class RoomsController {
           }
         });
     } catch (error) {
-      console.log(error);
       return res.status(200).json({
         status: false,
-        message: "Opps something went wrong.",
+        message: "Oops something went wrong.",
+        data: error,
+      });
+    }
+  };
+
+  update_room_status = async (req, res) => {
+    try {
+      let data = req.body;
+      await room_reservation
+        .update({ status: data.status }, { where: { id: data.id }, limit: 1 })
+        .then(async (resp) => {
+          if (resp) {
+            return res.status(200).json({
+              status: true,
+              message: "Item Updated found.",
+              data: resp,
+            });
+          } else {
+            return res.status(200).json({
+              status: false,
+              message: "Items not found.",
+            });
+          }
+        });
+    } catch (error) {
+      return res.status(200).json({
+        status: false,
+        message: "Oops something went wrong.",
         data: error,
       });
     }

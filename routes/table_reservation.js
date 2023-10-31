@@ -25,4 +25,10 @@ router.post(
   TableReservationController.get_all_table_reservation
 );
 
+router.post(
+  "/update_table_reservation_status",
+  authMiddleware.isAuthenticate,
+  TableReservationController.update_table_reservation_status
+);
+
 module.exports = router;

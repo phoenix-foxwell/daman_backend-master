@@ -29,7 +29,7 @@ class MembershipController {
             });
         } catch (error) {
             console.log(error)
-            return res.status(200).json({ status: false, message: "Opps something went wrong.", data: error });
+            return res.status(200).json({ status: false, message: "Oops something went wrong.", data: error });
         }   
     }
 

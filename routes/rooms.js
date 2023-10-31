@@ -24,5 +24,10 @@ router.post(
   authMiddleware.isAuthenticate,
   RoomsController.get_room_reservation
 );
+router.post(
+  "/update_room_status",
+  authMiddleware.isAuthenticate,
+  RoomsController.update_room_status
+);
 
 module.exports = router;

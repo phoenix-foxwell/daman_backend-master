@@ -34,7 +34,7 @@ class MessageController {
             });
         } catch (error) {
             console.log(error)
-            return res.status(200).json({ status: false, message: "Opps something went wrong.", data: error });
+            return res.status(200).json({ status: false, message: "Oops something went wrong.", data: error });
         }   
     }
     get_message_list = async (req, res) =>{
@@ -85,7 +85,7 @@ class MessageController {
                 }
         } catch (error) {
             console.log(error)
-            return res.status(200).json({ status: false, message: "Opps something went wrong.", data: error });
+            return res.status(200).json({ status: false, message: "Oops something went wrong.", data: error });
         }   
     }
     //FOR GET USER IDS FROM CHAT-MESSAGE
@@ -139,7 +139,7 @@ class MessageController {
             });
         } catch (error) {
             console.log(error)
-            return res.status(200).json({ status: false, message: "Opps something went wrong.", data: error });
+            return res.status(200).json({ status: false, message: "Oops something went wrong.", data: error });
         }   
     }
 }
