@@ -1,3 +1,4 @@
+const { DataTypes } = require("sequelize");
 module.exports = (sequelize, Sequelize) => {
   const Guests = sequelize.define(
     "tbl_table_reservation",
@@ -34,12 +35,12 @@ module.exports = (sequelize, Sequelize) => {
         defaultValue: 0,
       },
       visitdate: {
-        type: "DATE",
+        type: DataTypes.DATE,
         allowNull: false,
         // default: Sequelize.literal("GETDATE"),
       },
       visittime: {
-        type: "Time",
+        type: DataTypes.TIME,
         allowNull: false,
         // defaultValue: Sequelize.literal("CURRENT_TIME"),
       },

@@ -33,7 +33,6 @@ class TableReservationController {
             const data = await table_reservation
               .create(req.body)
               .then(async (res_user) => {
-                console.log(res_user);
                 return res.status(200).json({
                   status: false,
                   message: "Table Reservation added.",
