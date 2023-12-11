@@ -10,6 +10,7 @@ var messages = require("./routes/messages");
 var memberships = require("./routes/memberships");
 var club = require("./routes/club");
 var table_reservation = require("./routes/table_reservation");
+var mail = require("./routes/mail");
 
 var pages_call = require("./routes/pages_call");
 
@@ -58,6 +59,7 @@ app.use("/messages/", messages);
 app.use("/membership/", memberships);
 app.use("/club/", club);
 app.use("/table_reservation/", table_reservation);
+app.use("/mail/", mail);
 
 app.set("view engine", "ejs");
 

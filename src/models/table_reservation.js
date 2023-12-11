@@ -39,9 +39,15 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         // default: Sequelize.literal("GETDATE"),
       },
+      // visittime: {
+      //   type: DataTypes.TIME,
+      //   allowNull: false,
+      //   // defaultValue: Sequelize.literal("CURRENT_TIME"),
+      // },
+
       visittime: {
-        type: DataTypes.TIME,
-        allowNull: false,
+        type: Sequelize.STRING(255),
+        allowNull: true,
         // defaultValue: Sequelize.literal("CURRENT_TIME"),
       },
       created_at: {

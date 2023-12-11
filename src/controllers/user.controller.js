@@ -12,6 +12,7 @@ const machines = db.machines;
 //USER CONTROLLER
 class UsersController {
   send_otp = async (req, res) => {
+    console.log("req: ------------", req.body);
     try {
       await users
         .findOne({
