@@ -6,5 +6,7 @@ var MailController = require("./../src/controllers/mail.controller");
 router.post("/contact", MailController.contact);
 router.post("/enquiry", MailController.enquiry);
 router.post("/complaint", MailController.complaint);
+router.post("/getcec", MailController.getcec);
+router.post("/updatecec", MailController.updatecec);
 
 module.exports = router;

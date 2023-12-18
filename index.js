@@ -61,6 +61,8 @@ app.use("/club/", club);
 app.use("/table_reservation/", table_reservation);
 app.use("/mail/", mail);
 
+require("dotenv").config();
+
 app.set("view engine", "ejs");
 
 const viewsPath = path.join(__dirname, "./views");

@@ -329,6 +329,35 @@ class UsersController {
       });
     }
   };
+
+  get_user_from_mobile = async (req, res) => {
+    try {
+      let data = req.body;
+      await users
+        .findAll({ where: { mobile_no: data.mobile_no } })
+        .then(async (res_user) => {
+          if (res_user && res_user.length > 0) {
+            return res.status(200).json({
+              status: true,
+              message: "Users found.",
+              data: res_user,
+            });
+          } else {
+            return res.status(200).json({
+              status: false,
+              message: "Users not found.",
+            });
+          }
+        });
+    } catch (error) {
+      console.log(error);
+      return res.status(200).json({
+        status: false,
+        message: "Oops something went wrong.",
+        data: error,
+      });
+    }
+  };
 }
 
 module.exports = new UsersController();
