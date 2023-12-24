@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-  const MembershipMaster = sequelize.define(
-    "tbl_membership_master",
+  const tb_card = sequelize.define(
+    "tbl_card",
     {
       id: {
         type: Sequelize.INTEGER,
@@ -8,51 +8,40 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         allowNull: false,
       },
-      membership_type: {
+      card_serial_no: {
         type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      membership_amt: {
-        type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: 0,
+        defaultValue: "",
       },
-      membership_gst: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      membership_period: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      description: {
+      card_no: {
         type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      no_of_family_member: {
-        type: Sequelize.INTEGER,
         allowNull: false,
-        default: 0,
-      },
-      no_of_secondary_member: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        default: 0,
-      },
-      status: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,
-      },
-      start_date: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+        defaultValue: "",
       },
       end_date: {
         type: Sequelize.STRING(255),
         allowNull: true,
+        defaultValue: "0",
+      },
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      membership_id: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+      },
+      wallet_balance: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        defaultValue: 0,
+      },
+      status: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+        defaultValue: "0",
       },
       created_at: {
         type: "TIMESTAMP",
@@ -73,5 +62,5 @@ module.exports = (sequelize, Sequelize) => {
     { timestamps: false }
   );
 
-  return MembershipMaster;
+  return tb_card;
 };

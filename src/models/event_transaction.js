@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-  const MembershipMaster = sequelize.define(
-    "tbl_membership_master",
+  const event_transaction = sequelize.define(
+    "tbl_event_transaction",
     {
       id: {
         type: Sequelize.INTEGER,
@@ -8,51 +8,45 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         allowNull: false,
       },
-      membership_type: {
+      event_venue: {
         type: Sequelize.STRING(255),
         allowNull: true,
-      },
-      membership_amt: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      membership_gst: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      membership_period: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      description: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      no_of_family_member: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        default: 0,
-      },
-      no_of_secondary_member: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        default: 0,
-      },
-      status: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,
+        defaultValue: "0",
       },
       start_date: {
         type: Sequelize.STRING(255),
         allowNull: true,
+        defaultValue: "0",
       },
       end_date: {
         type: Sequelize.STRING(255),
         allowNull: true,
+        defaultValue: "0",
+      },
+      amount: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      event_description: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+        defaultValue: "0",
+      },
+      pay_mode: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      pay_ref: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+        defaultValue: "0",
+      },
+      status: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
       created_at: {
         type: "TIMESTAMP",
@@ -73,5 +67,5 @@ module.exports = (sequelize, Sequelize) => {
     { timestamps: false }
   );
 
-  return MembershipMaster;
+  return event_transaction;
 };

@@ -12,10 +12,6 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.INTEGER,
         allowNull: false,
       },
-      room_no: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-      },
       user_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -25,19 +21,29 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
       from_date: {
-        type: "DATE",
+        type: Sequelize.STRING(255),
         allowNull: false,
         default: Sequelize.literal("GETDATE"),
       },
       to_date: {
-        type: "DATE",
+        type: Sequelize.STRING(255),
         allowNull: false,
         default: Sequelize.literal("GETDATE"),
       },
-      quantity: {
-        type: Sequelize.INTEGER,
+      transaction_date: {
+        type: Sequelize.STRING(255),
         allowNull: false,
-        defaultValue: 1,
+        default: "0",
+      },
+      transaction_details: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        default: "0",
+      },
+      remark: {
+        type: Sequelize.STRING(255),
+        allowNull: false,
+        default: "0",
       },
       status: {
         type: Sequelize.INTEGER,
@@ -53,6 +59,11 @@ module.exports = (sequelize, Sequelize) => {
         type: "TIMESTAMP",
         defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
         allowNull: false,
+      },
+      updated_by: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
     },
     { timestamps: false }

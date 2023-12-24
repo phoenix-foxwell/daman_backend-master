@@ -8,7 +8,6 @@ const users = db.users;
 const membership_transaction = db.membership_transaction;
 const wallet_trans = db.wallet_trans;
 const machines = db.machines;
-
 //USER CONTROLLER
 class UsersController {
   send_otp = async (req, res) => {
@@ -194,7 +193,6 @@ class UsersController {
   update_wallet_amount = async (req, res) => {
     try {
       let data = req.body;
-
       await users
         .findOne({
           where: { id: req.body.user_id },
@@ -210,17 +208,27 @@ class UsersController {
                 { where: { id: data.user_id }, limit: 1 }
               )
               .then(async (resp) => {
-                if (resp) {
-                  return res.status(200).json({
-                    status: true,
-                    message: "Wallet updated.",
+                await wallet_trans
+                  .create({
+                    user_id: data.user_id,
+                    amount: data.walletbalance,
+                    credit_debit: 1,
+                    machine_id: 1,
+                    mode: data.mode,
+                  })
+                  .then(async (res_wallet) => {
+                    if (res_wallet) {
+                      return res.status(200).json({
+                        status: true,
+                        message: "Wallet updated.",
+                      });
+                    } else {
+                      return res.status(200).json({
+                        status: false,
+                        message: "Oops something went wrong.",
+                      });
+                    }
                   });
-                } else {
-                  return res.status(200).json({
-                    status: false,
-                    message: "Oops something went wrong.",
-                  });
-                }
               });
           }
         });

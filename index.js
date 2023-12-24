@@ -11,6 +11,7 @@ var memberships = require("./routes/memberships");
 var club = require("./routes/club");
 var table_reservation = require("./routes/table_reservation");
 var mail = require("./routes/mail");
+var activitiesmaster = require("./routes/activitiesmaster");
 
 var pages_call = require("./routes/pages_call");
 
@@ -60,6 +61,7 @@ app.use("/membership/", memberships);
 app.use("/club/", club);
 app.use("/table_reservation/", table_reservation);
 app.use("/mail/", mail);
+app.use("/activitiesmaster/", activitiesmaster);
 
 require("dotenv").config();
 

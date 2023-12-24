@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-  const MembershipMaster = sequelize.define(
-    "tbl_membership_master",
+  const activities_master = sequelize.define(
+    "tbl_activities_master",
     {
       id: {
         type: Sequelize.INTEGER,
@@ -8,51 +8,60 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         allowNull: false,
       },
-      membership_type: {
+      activity_name: {
         type: Sequelize.STRING(255),
         allowNull: true,
+        defaultValue: "0",
       },
-      membership_amt: {
+      member_amount: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
       },
-      membership_gst: {
+      non_member_amount: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
       },
-      membership_period: {
+      member_monthly_amount: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
       },
-      description: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      no_of_family_member: {
+      non_member_monthly_amount: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        default: 0,
+        defaultValue: 0,
       },
-      no_of_secondary_member: {
+      guest_member_amount: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        default: 0,
-      },
-      status: {
-        type: Sequelize.BOOLEAN,
-        allowNull: false,
-        defaultValue: true,
+        defaultValue: 0,
       },
       start_date: {
         type: Sequelize.STRING(255),
         allowNull: true,
+        defaultValue: "0",
       },
       end_date: {
         type: Sequelize.STRING(255),
         allowNull: true,
+        defaultValue: "0",
+      },
+      activity_description: {
+        type: Sequelize.STRING(255),
+        allowNull: true,
+        defaultValue: "0",
+      },
+      validity: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      status: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
       created_at: {
         type: "TIMESTAMP",
@@ -73,5 +82,5 @@ module.exports = (sequelize, Sequelize) => {
     { timestamps: false }
   );
 
-  return MembershipMaster;
+  return activities_master;
 };

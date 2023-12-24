@@ -34,6 +34,8 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.users = require("./users")(sequelize, Sequelize);
+db.membership_payments = require("./membership_payments")(sequelize, Sequelize);
+db.card = require("./card")(sequelize, Sequelize);
 db.membership_master = require("./membership_master")(sequelize, Sequelize);
 db.guests = require("./guests")(sequelize, Sequelize);
 db.rooms = require("./rooms")(sequelize, Sequelize);
@@ -51,6 +53,15 @@ db.membership_transaction = require("./membership_transaction")(
 );
 db.table_reservation = require("./table_reservation")(sequelize, Sequelize);
 db.table_tickets = require("./table_tickets")(sequelize, Sequelize);
+
+db.virtual_account = require("./virtual_account")(sequelize, Sequelize);
+db.event_transaction = require("./event_transaction")(sequelize, Sequelize);
+db.activities_master = require("./activities_master")(sequelize, Sequelize);
+db.activity_transaction = require("./activity_transaction")(
+  sequelize,
+  Sequelize
+);
+db.va_transaction = require("./va_transaction")(sequelize, Sequelize);
 
 sequelize.sync();
 module.exports = db;

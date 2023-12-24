@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-  const MembershipMaster = sequelize.define(
-    "tbl_membership_master",
+  const va_transaction = sequelize.define(
+    "tbl_va_transaction",
     {
       id: {
         type: Sequelize.INTEGER,
@@ -8,51 +8,45 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         allowNull: false,
       },
-      membership_type: {
+      transaction_details: {
         type: Sequelize.STRING(255),
         allowNull: true,
+        defaultValue: "0",
       },
-      membership_amt: {
+      cr_dr: {
         type: Sequelize.INTEGER,
         allowNull: false,
         defaultValue: 0,
       },
-      membership_gst: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      membership_period: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0,
-      },
-      description: {
+      transaction_date: {
         type: Sequelize.STRING(255),
         allowNull: true,
+        defaultValue: "0",
       },
-      no_of_family_member: {
+      amount: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        default: 0,
+        defaultValue: 0,
       },
-      no_of_secondary_member: {
+      from_id: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        default: 0,
+        defaultValue: 0,
+      },
+      to_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
+      mode: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
       status: {
-        type: Sequelize.BOOLEAN,
+        type: Sequelize.INTEGER,
         allowNull: false,
-        defaultValue: true,
-      },
-      start_date: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      end_date: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
+        defaultValue: 0,
       },
       created_at: {
         type: "TIMESTAMP",
@@ -73,5 +67,5 @@ module.exports = (sequelize, Sequelize) => {
     { timestamps: false }
   );
 
-  return MembershipMaster;
+  return va_transaction;
 };

@@ -49,10 +49,6 @@ class MailController {
   enquiry = async (req, res) => {
     var data = req.body;
 
-    // sgMail.setApiKey(
-    //   "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"
-    // );
-
     sgMail.setApiKey(process.env.SEND_GRID);
 
     const msg = {
