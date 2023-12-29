@@ -11,6 +11,7 @@ const rooms = db.rooms;
 const room_reservation = db.room_reservation;
 const users = db.users;
 const wallet_trans = db.wallet_trans;
+const room_events = db.room_events;
 
 // .query(
 //   `SELECT sum(quantity) as total,room_id FROM tbl_room_reservations where from_date ='${from_date}' or to_date = '${to_date}' group by room_id`,
@@ -81,11 +82,34 @@ class RoomsController {
         }
 
         if (room_array.length > 0) {
-          return res.status(200).json({
-            status: true,
-            message: "Rooms found.",
-            data: room_array,
+          const query = `SELECT * FROM tbl_room_events WHERE status = 1 AND (start_date BETWEEN "${from_date}" AND "${to_date}"
+            OR end_date BETWEEN "${from_date}" AND "${to_date}");`;
+          const get_room_events = await db.sequelize.query(query, {
+            type: db.sequelize.QueryTypes.SELECT,
           });
+
+          if (get_room_events.length > 0) {
+            let new_reslut = [];
+
+            for (let i = 0; i < room_array.length; i++) {
+              new_reslut.push(room_array[i]);
+              new_reslut[i].member_price = get_room_events[0].member_price;
+              new_reslut[i].nonmember_price =
+                get_room_events[0].nonmember_price;
+            }
+
+            return res.status(200).json({
+              status: true,
+              message: "Rooms found.",
+              data: new_reslut,
+            });
+          } else {
+            return res.status(200).json({
+              status: true,
+              message: "Rooms found.",
+              data: room_array,
+            });
+          }
         } else {
           return res.status(200).json({
             status: false,

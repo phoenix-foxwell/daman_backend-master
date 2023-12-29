@@ -4,15 +4,15 @@ const db = require("../models");
 
 //TABLES DECLARATION
 const activities_master = db.activities_master;
-const activity_transaction = db.activity_transaction;
+const event_transaction = db.event_transaction;
 const wallet_trans = db.wallet_trans;
 const users = db.users;
 
 const Op = db.Sequelize.Op;
 
 //USER CONTROLLER
-class ActivitiesMasterController {
-  get_activity_master = async (req, res) => {
+class EventsMasterController {
+  get_event_master = async (req, res) => {
     const data = req.body;
     try {
       await activities_master
@@ -31,7 +31,7 @@ class ActivitiesMasterController {
 
             return res.status(200).json({
               status: true,
-              message: "Club activity found.",
+              message: "Club event found.",
               data: filtered,
             });
           } else {
@@ -50,7 +50,7 @@ class ActivitiesMasterController {
     }
   };
 
-  add_activity = async (req, res) => {
+  add_event = async (req, res) => {
     const getpaymentmode = (value) => {
       switch (value.toLowerCase()) {
         case "cash":
@@ -94,12 +94,12 @@ class ActivitiesMasterController {
             } else {
               // main code for gest start from here
 
-              const addactivity = await activity_transaction.create({
+              const addevent = await event_transaction.create({
                 user_id: data.user_id,
                 amount: data.amount,
                 from_date: fromDate,
                 to_date: fromDate,
-                activity_name: data.activity_name,
+                event_name: data.event_name,
                 pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
                 transaction_details: data.transaction_details,
                 transaction_date: new Date().toISOString(),
@@ -109,7 +109,7 @@ class ActivitiesMasterController {
                 updated_by: data.updated_user_id,
               });
 
-              if (addactivity) {
+              if (addevent) {
                 const user_wallet = await users.update(
                   {
                     walletbalance:
@@ -130,8 +130,8 @@ class ActivitiesMasterController {
                   if (res_wallet_trans) {
                     return res.status(200).json({
                       status: true,
-                      message: "Club activity created.",
-                      data: addactivity,
+                      message: "Club event created.",
+                      data: addevent,
                     });
                   } else {
                     return res.status(200).json({
@@ -157,12 +157,12 @@ class ActivitiesMasterController {
           } else {
             // if user donsen't select wallet
 
-            const addactivity = await activity_transaction.create({
+            const addevent = await event_transaction.create({
               user_id: data.user_id,
               amount: data.amount,
               from_date: fromDate,
               to_date: fromDate,
-              activity_name: data.activity_name,
+              event_name: data.event_name,
               pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
               transaction_details: data.transaction_details,
               transaction_date: new Date().toISOString(),
@@ -171,11 +171,11 @@ class ActivitiesMasterController {
               status: 1,
               updated_by: data.updated_user_id,
             });
-            if (addactivity) {
+            if (addevent) {
               return res.status(200).json({
                 status: true,
-                message: "Club activity created for guest.",
-                data: addactivity,
+                message: "Club event created for guest.",
+                data: addevent,
               });
             } else {
               return res.status(200).json({
@@ -187,20 +187,20 @@ class ActivitiesMasterController {
           }
         } else {
           // if user is not guest
-          const findactivity = await activity_transaction.findOne({
+          const findevent = await event_transaction.findOne({
             where: {
               user_id: data.user_id,
               status: 1,
-              activity_name: data.activity_name,
+              event_name: data.event_name,
             },
             order: [["created_at", "DESC"]],
           });
 
-          if (findactivity) {
-            if (findactivity.dataValues.to_date > new Date().toISOString()) {
+          if (findevent) {
+            if (findevent.dataValues.to_date > new Date().toISOString()) {
               return res.status(200).json({
                 status: false,
-                message: "User activity active.",
+                message: "User event active.",
               });
             } else {
               if (data.transaction_details.toLowerCase() == "wallet") {
@@ -212,12 +212,12 @@ class ActivitiesMasterController {
                   });
                 } else {
                   // main code for gest start from here
-                  const addactivity = await activity_transaction.create({
+                  const addevent = await event_transaction.create({
                     user_id: data.user_id,
                     amount: data.amount,
                     from_date: fromDate,
                     to_date: validityEndDate,
-                    activity_name: data.activity_name,
+                    event_name: data.event_name,
                     pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
                     transaction_details: data.transaction_details,
                     transaction_date: new Date().toISOString(),
@@ -227,7 +227,7 @@ class ActivitiesMasterController {
                     updated_by: data.updated_user_id,
                   });
 
-                  if (addactivity) {
+                  if (addevent) {
                     const user_wallet = await users.update(
                       {
                         walletbalance:
@@ -248,8 +248,8 @@ class ActivitiesMasterController {
                       if (res_wallet_trans) {
                         return res.status(200).json({
                           status: true,
-                          message: "Club activity created.",
-                          data: addactivity,
+                          message: "Club event created.",
+                          data: addevent,
                         });
                       } else {
                         return res.status(200).json({
@@ -275,12 +275,12 @@ class ActivitiesMasterController {
               } else {
                 // if user donsen't select wallet
 
-                const addactivity = await activity_transaction.create({
+                const addevent = await event_transaction.create({
                   user_id: data.user_id,
                   amount: data.amount,
                   from_date: fromDate,
                   to_date: validityEndDate,
-                  activity_name: data.activity_name,
+                  event_name: data.event_name,
                   pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
                   transaction_details: data.transaction_details,
                   transaction_date: new Date().toISOString(),
@@ -289,11 +289,11 @@ class ActivitiesMasterController {
                   status: 1,
                   updated_by: data.updated_user_id,
                 });
-                if (addactivity) {
+                if (addevent) {
                   return res.status(200).json({
                     status: true,
-                    message: "Club activity created for guest.",
-                    data: addactivity,
+                    message: "Club event created for guest.",
+                    data: addevent,
                   });
                 } else {
                   return res.status(200).json({
@@ -315,12 +315,12 @@ class ActivitiesMasterController {
                 });
               } else {
                 // main code for gest start from here
-                const addactivity = await activity_transaction.create({
+                const addevent = await event_transaction.create({
                   user_id: data.user_id,
                   amount: data.amount,
                   from_date: fromDate,
                   to_date: validityEndDate,
-                  activity_name: data.activity_name,
+                  event_name: data.event_name,
                   pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
                   transaction_details: data.transaction_details,
                   transaction_date: new Date().toISOString(),
@@ -330,7 +330,7 @@ class ActivitiesMasterController {
                   updated_by: data.updated_user_id,
                 });
 
-                if (addactivity) {
+                if (addevent) {
                   const user_wallet = await users.update(
                     {
                       walletbalance:
@@ -351,8 +351,8 @@ class ActivitiesMasterController {
                     if (res_wallet_trans) {
                       return res.status(200).json({
                         status: true,
-                        message: "Club activity created.",
-                        data: addactivity,
+                        message: "Club event created.",
+                        data: addevent,
                       });
                     } else {
                       return res.status(200).json({
@@ -378,12 +378,12 @@ class ActivitiesMasterController {
             } else {
               // if user donsen't select wallet
 
-              const addactivity = await activity_transaction.create({
+              const addevent = await event_transaction.create({
                 user_id: data.user_id,
                 amount: data.amount,
                 from_date: fromDate,
                 to_date: validityEndDate,
-                activity_name: data.activity_name,
+                event_name: data.event_name,
                 pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
                 transaction_details: data.transaction_details,
                 transaction_date: new Date().toISOString(),
@@ -392,11 +392,11 @@ class ActivitiesMasterController {
                 status: 1,
                 updated_by: data.updated_user_id,
               });
-              if (addactivity) {
+              if (addevent) {
                 return res.status(200).json({
                   status: true,
-                  message: "Club activity created for guest.",
-                  data: addactivity,
+                  message: "Club event created for guest.",
+                  data: addevent,
                 });
               } else {
                 return res.status(200).json({
@@ -415,77 +415,6 @@ class ActivitiesMasterController {
           data: error,
         });
       }
-
-      // const addactivity = await activity_transaction.create({
-      //   user_id: data.user_id,
-      //   amount: data.amount,
-      //   from_date: fromDate,
-      //   to_date: validityEndDate,
-      //   activity_name: data.activity_name,
-      //   pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
-      //   transaction_details: data.transaction_details,
-      //   transaction_date: new Date().toISOString(),
-      //   pay_status: data.pay_status,
-      //   remark: data.remark,
-      //   status: 1,
-      //   updated_by: data.updated_user_id,
-      // });
-
-      // if (addactivity) {
-      //   const res_user = await users.findOne({
-      //     where: { id: req.body.user_id },
-      //   });
-
-      //   if (res_user) {
-      //     const user_wallet = await users.update(
-      //       {
-      //         walletbalance: res_user.dataValues.walletbalance - data.amount,
-      //       },
-      //       { where: { id: data.user_id }, limit: 1 }
-      //     );
-
-      //     if (user_wallet) {
-      //       const res_wallet_trans = await wallet_trans.create({
-      //         user_id: data.user_id,
-      //         amount: data.amount,
-      //         credit_debit: 2,
-      //         machine_id: 1,
-      //         mode: getpaymentmode(data.pay_mode),
-      //       });
-
-      //       if (res_wallet_trans) {
-      //         return res.status(200).json({
-      //           status: true,
-      //           message: "Club activity created.",
-      //           data: addactivity,
-      //         });
-      //       } else {
-      //         return res.status(200).json({
-      //           status: false,
-      //           message: "Oops something went wrong.",
-      //         });
-      //       }
-      //     } else {
-      //       return res.status(200).json({
-      //         status: false,
-      //         message: "Oops something went wrong.",
-      //         data: error,
-      //       });
-      //     }
-      //   } else {
-      //     return res.status(200).json({
-      //       status: false,
-      //       message: "User not found.",
-      //       data: error,
-      //     });
-      //   }
-      // } else {
-      //   return res.status(200).json({
-      //     status: false,
-      //     message: "Oops something went wrong.",
-      //     data: error,
-      //   });
-      // }
     } catch (error) {
       return res.status(200).json({
         status: false,
@@ -495,30 +424,28 @@ class ActivitiesMasterController {
     }
   };
 
-  get_user_activity = async (req, res) => {
+  get_user_event = async (req, res) => {
     const data = req.body;
     try {
-      await activity_transaction
-        .findAll({
-          where: {
-            user_id: data.user_id,
-            status: 1,
-          },
-        })
-        .then(async (res_user) => {
-          if (res_user) {
-            return res.status(200).json({
-              status: true,
-              message: "Club activity found.",
-              data: res_user,
-            });
-          } else {
-            return res.status(200).json({
-              status: false,
-              message: "Guest not found.",
-            });
-          }
+      const event_data = await event_transaction.findAll({
+        where: {
+          user_id: data.user_id,
+          status: 1,
+        },
+      });
+
+      if (event_data) {
+        return res.status(200).json({
+          status: true,
+          message: "Club event found.",
+          data: event_data,
         });
+      } else {
+        return res.status(200).json({
+          status: false,
+          message: "Guest not found.",
+        });
+      }
     } catch (error) {
       return res.status(200).json({
         status: false,
@@ -529,4 +456,4 @@ class ActivitiesMasterController {
   };
 }
 
-module.exports = new ActivitiesMasterController();
+module.exports = new EventsMasterController();

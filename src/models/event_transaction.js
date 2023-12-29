@@ -8,6 +8,11 @@ module.exports = (sequelize, Sequelize) => {
         autoIncrement: true,
         allowNull: false,
       },
+      user_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
+      },
       event_venue: {
         type: Sequelize.STRING(255),
         allowNull: true,
