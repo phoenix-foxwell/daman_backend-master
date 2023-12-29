@@ -62,6 +62,7 @@ db.activity_transaction = require("./activity_transaction")(
   Sequelize
 );
 db.va_transaction = require("./va_transaction")(sequelize, Sequelize);
+db.room_events = require("./room_events")(sequelize, Sequelize);
 
 sequelize.sync();
 module.exports = db;

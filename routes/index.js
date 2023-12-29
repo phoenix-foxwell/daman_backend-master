@@ -37,6 +37,8 @@ router.post(
   UsersController.get_requested_users
 );
 
+router.post("/admin/tw_get_user", UsersController.tw_get_user);
+
 // router.get('/', async(req, res) => {
 //     if(req.session.loggedin){
 //         res.render('data_management/list',{token:req.session.token, role:req.session.role, fullname:req.session.fullname})

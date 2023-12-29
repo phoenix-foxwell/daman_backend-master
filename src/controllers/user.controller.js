@@ -366,6 +366,44 @@ class UsersController {
       });
     }
   };
+
+  tw_get_user = async (req, res) => {
+    let data = req.body;
+
+    if (!data.id) {
+      return res.status(200).json({
+        status: false,
+        message: "Please provide user id.",
+      });
+    }
+
+    try {
+      const res_user = await users.findOne({
+        attributes: ["id", "status", "membership_end_date"],
+        where: { id: data.id },
+      });
+
+      if (res_user) {
+        return res.status(200).json({
+          status: true,
+          message: "User found.",
+          data: res_user,
+        });
+      } else {
+        return res.status(200).json({
+          status: false,
+          message: "User not found.",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      return res.status(200).json({
+        status: false,
+        message: "Oops something went wrong.",
+        data: error,
+      });
+    }
+  };
 }
 
 module.exports = new UsersController();

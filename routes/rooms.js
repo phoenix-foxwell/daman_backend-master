@@ -20,6 +20,11 @@ router.post(
   RoomsController.room_reservation
 );
 router.post(
+  "/manager_room_reservation",
+  authMiddleware.isAuthenticate,
+  RoomsController.manager_room_reservation
+);
+router.post(
   "/get_room_reservation",
   authMiddleware.isAuthenticate,
   RoomsController.get_room_reservation

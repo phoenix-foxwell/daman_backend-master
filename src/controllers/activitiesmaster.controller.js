@@ -76,76 +76,416 @@ class ActivitiesMasterController {
         new Date().getTime() + validityInDays * 24 * 60 * 60 * 1000
       ).toISOString();
 
-      const addactivity = await activity_transaction.create({
-        user_id: data.user_id,
-        amount: data.amount,
-        from_date: fromDate,
-        to_date: validityEndDate,
-        activity_name: data.activity_name,
-        pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
-        transaction_details: data.transaction_details,
-        transaction_date: new Date().toISOString(),
-        pay_status: data.pay_status,
-        remark: data.remark,
-        status: 1,
-        updated_by: data.updated_user_id,
+      const res_user = await users.findOne({
+        where: { id: req.body.user_id },
       });
 
-      if (addactivity) {
-        const res_user = await users.findOne({
-          where: { id: req.body.user_id },
-        });
+      if (res_user) {
+        // check if user is guest
+        if (data.membership_type.toLowerCase() == "guest") {
+          if (data.transaction_details.toLowerCase() == "wallet") {
+            //check user select wallet
+            if (data.amount > res_user.dataValues.walletbalance) {
+              return res.status(200).json({
+                status: false,
+                message: "Insufficient wallet balance.",
+                data: error,
+              });
+            } else {
+              // main code for gest start from here
 
-        if (res_user) {
-          const user_wallet = await users.update(
-            {
-              walletbalance: res_user.dataValues.walletbalance - data.amount,
-            },
-            { where: { id: data.user_id }, limit: 1 }
-          );
+              const addactivity = await activity_transaction.create({
+                user_id: data.user_id,
+                amount: data.amount,
+                from_date: fromDate,
+                to_date: fromDate,
+                activity_name: data.activity_name,
+                pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
+                transaction_details: data.transaction_details,
+                transaction_date: new Date().toISOString(),
+                pay_status: data.pay_status,
+                remark: data.remark,
+                status: 1,
+                updated_by: data.updated_user_id,
+              });
 
-          if (user_wallet) {
-            const res_wallet_trans = await wallet_trans.create({
+              if (addactivity) {
+                const user_wallet = await users.update(
+                  {
+                    walletbalance:
+                      res_user.dataValues.walletbalance - data.amount,
+                  },
+                  { where: { id: data.user_id }, limit: 1 }
+                );
+
+                if (user_wallet) {
+                  const res_wallet_trans = await wallet_trans.create({
+                    user_id: data.user_id,
+                    amount: data.amount,
+                    credit_debit: 2,
+                    machine_id: 1,
+                    mode: getpaymentmode(data.pay_mode),
+                  });
+
+                  if (res_wallet_trans) {
+                    return res.status(200).json({
+                      status: true,
+                      message: "Club activity created.",
+                      data: addactivity,
+                    });
+                  } else {
+                    return res.status(200).json({
+                      status: false,
+                      message: "Oops something went wrong.",
+                    });
+                  }
+                } else {
+                  return res.status(200).json({
+                    status: false,
+                    message: "Oops something went wrong.",
+                  });
+                }
+              } else {
+                return res.status(200).json({
+                  status: false,
+                  message: "Oops something went wrong.",
+                  data: error,
+                });
+              }
+              // main code for gest end start from here
+            }
+          } else {
+            // if user donsen't select wallet
+
+            const addactivity = await activity_transaction.create({
               user_id: data.user_id,
               amount: data.amount,
-              credit_debit: 2,
-              machine_id: 1,
-              mode: getpaymentmode(data.pay_mode),
+              from_date: fromDate,
+              to_date: fromDate,
+              activity_name: data.activity_name,
+              pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
+              transaction_details: data.transaction_details,
+              transaction_date: new Date().toISOString(),
+              pay_status: data.pay_status,
+              remark: data.remark,
+              status: 1,
+              updated_by: data.updated_user_id,
             });
-
-            if (res_wallet_trans) {
+            if (addactivity) {
               return res.status(200).json({
                 status: true,
-                message: "Club activity created.",
+                message: "Club activity created for guest.",
                 data: addactivity,
               });
             } else {
               return res.status(200).json({
                 status: false,
                 message: "Oops something went wrong.",
+                data: error,
               });
             }
-          } else {
-            return res.status(200).json({
-              status: false,
-              message: "Oops something went wrong.",
-              data: error,
-            });
           }
         } else {
-          return res.status(200).json({
-            status: false,
-            message: "User not found.",
-            data: error,
+          // if user is not guest
+          const findactivity = await activity_transaction.findOne({
+            where: {
+              user_id: data.user_id,
+              status: 1,
+              activity_name: data.activity_name,
+            },
+            order: [["created_at", "DESC"]],
           });
+
+          if (findactivity) {
+            if (findactivity.dataValues.to_date > new Date().toISOString()) {
+              return res.status(200).json({
+                status: false,
+                message: "User activity active.",
+              });
+            } else {
+              if (data.transaction_details.toLowerCase() == "wallet") {
+                //check user select wallet
+                if (data.amount > res_user.dataValues.walletbalance) {
+                  return res.status(200).json({
+                    status: false,
+                    message: "Insufficient wallet balance.",
+                  });
+                } else {
+                  // main code for gest start from here
+                  const addactivity = await activity_transaction.create({
+                    user_id: data.user_id,
+                    amount: data.amount,
+                    from_date: fromDate,
+                    to_date: validityEndDate,
+                    activity_name: data.activity_name,
+                    pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
+                    transaction_details: data.transaction_details,
+                    transaction_date: new Date().toISOString(),
+                    pay_status: data.pay_status,
+                    remark: data.remark,
+                    status: 1,
+                    updated_by: data.updated_user_id,
+                  });
+
+                  if (addactivity) {
+                    const user_wallet = await users.update(
+                      {
+                        walletbalance:
+                          res_user.dataValues.walletbalance - data.amount,
+                      },
+                      { where: { id: data.user_id }, limit: 1 }
+                    );
+
+                    if (user_wallet) {
+                      const res_wallet_trans = await wallet_trans.create({
+                        user_id: data.user_id,
+                        amount: data.amount,
+                        credit_debit: 2,
+                        machine_id: 1,
+                        mode: getpaymentmode(data.pay_mode),
+                      });
+
+                      if (res_wallet_trans) {
+                        return res.status(200).json({
+                          status: true,
+                          message: "Club activity created.",
+                          data: addactivity,
+                        });
+                      } else {
+                        return res.status(200).json({
+                          status: false,
+                          message: "Oops something went wrong.",
+                        });
+                      }
+                    } else {
+                      return res.status(200).json({
+                        status: false,
+                        message: "Oops something went wrong.",
+                      });
+                    }
+                  } else {
+                    return res.status(200).json({
+                      status: false,
+                      message: "Oops something went wrong.",
+                      data: error,
+                    });
+                  }
+                  // main code for gest end start from here
+                }
+              } else {
+                // if user donsen't select wallet
+
+                const addactivity = await activity_transaction.create({
+                  user_id: data.user_id,
+                  amount: data.amount,
+                  from_date: fromDate,
+                  to_date: validityEndDate,
+                  activity_name: data.activity_name,
+                  pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
+                  transaction_details: data.transaction_details,
+                  transaction_date: new Date().toISOString(),
+                  pay_status: data.pay_status,
+                  remark: data.remark,
+                  status: 1,
+                  updated_by: data.updated_user_id,
+                });
+                if (addactivity) {
+                  return res.status(200).json({
+                    status: true,
+                    message: "Club activity created for guest.",
+                    data: addactivity,
+                  });
+                } else {
+                  return res.status(200).json({
+                    status: false,
+                    message: "Oops something went wrong.",
+                    data: error,
+                  });
+                }
+              }
+            }
+          } else {
+            if (data.transaction_details.toLowerCase() == "wallet") {
+              //check user select wallet
+              if (data.amount > res_user.dataValues.walletbalance) {
+                return res.status(200).json({
+                  status: false,
+                  message: "Insufficient wallet balance.",
+                  data: error,
+                });
+              } else {
+                // main code for gest start from here
+                const addactivity = await activity_transaction.create({
+                  user_id: data.user_id,
+                  amount: data.amount,
+                  from_date: fromDate,
+                  to_date: validityEndDate,
+                  activity_name: data.activity_name,
+                  pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
+                  transaction_details: data.transaction_details,
+                  transaction_date: new Date().toISOString(),
+                  pay_status: data.pay_status,
+                  remark: data.remark,
+                  status: 1,
+                  updated_by: data.updated_user_id,
+                });
+
+                if (addactivity) {
+                  const user_wallet = await users.update(
+                    {
+                      walletbalance:
+                        res_user.dataValues.walletbalance - data.amount,
+                    },
+                    { where: { id: data.user_id }, limit: 1 }
+                  );
+
+                  if (user_wallet) {
+                    const res_wallet_trans = await wallet_trans.create({
+                      user_id: data.user_id,
+                      amount: data.amount,
+                      credit_debit: 2,
+                      machine_id: 1,
+                      mode: getpaymentmode(data.pay_mode),
+                    });
+
+                    if (res_wallet_trans) {
+                      return res.status(200).json({
+                        status: true,
+                        message: "Club activity created.",
+                        data: addactivity,
+                      });
+                    } else {
+                      return res.status(200).json({
+                        status: false,
+                        message: "Oops something went wrong.",
+                      });
+                    }
+                  } else {
+                    return res.status(200).json({
+                      status: false,
+                      message: "Oops something went wrong.",
+                    });
+                  }
+                } else {
+                  return res.status(200).json({
+                    status: false,
+                    message: "Oops something went wrong.",
+                    data: error,
+                  });
+                }
+                // main code for gest end start from here
+              }
+            } else {
+              // if user donsen't select wallet
+
+              const addactivity = await activity_transaction.create({
+                user_id: data.user_id,
+                amount: data.amount,
+                from_date: fromDate,
+                to_date: validityEndDate,
+                activity_name: data.activity_name,
+                pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
+                transaction_details: data.transaction_details,
+                transaction_date: new Date().toISOString(),
+                pay_status: data.pay_status,
+                remark: data.remark,
+                status: 1,
+                updated_by: data.updated_user_id,
+              });
+              if (addactivity) {
+                return res.status(200).json({
+                  status: true,
+                  message: "Club activity created for guest.",
+                  data: addactivity,
+                });
+              } else {
+                return res.status(200).json({
+                  status: false,
+                  message: "Oops something went wrong.",
+                  data: error,
+                });
+              }
+            }
+          }
         }
       } else {
         return res.status(200).json({
           status: false,
-          message: "Oops something went wrong.",
+          message: "User not found.",
           data: error,
         });
       }
+
+      // const addactivity = await activity_transaction.create({
+      //   user_id: data.user_id,
+      //   amount: data.amount,
+      //   from_date: fromDate,
+      //   to_date: validityEndDate,
+      //   activity_name: data.activity_name,
+      //   pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
+      //   transaction_details: data.transaction_details,
+      //   transaction_date: new Date().toISOString(),
+      //   pay_status: data.pay_status,
+      //   remark: data.remark,
+      //   status: 1,
+      //   updated_by: data.updated_user_id,
+      // });
+
+      // if (addactivity) {
+      //   const res_user = await users.findOne({
+      //     where: { id: req.body.user_id },
+      //   });
+
+      //   if (res_user) {
+      //     const user_wallet = await users.update(
+      //       {
+      //         walletbalance: res_user.dataValues.walletbalance - data.amount,
+      //       },
+      //       { where: { id: data.user_id }, limit: 1 }
+      //     );
+
+      //     if (user_wallet) {
+      //       const res_wallet_trans = await wallet_trans.create({
+      //         user_id: data.user_id,
+      //         amount: data.amount,
+      //         credit_debit: 2,
+      //         machine_id: 1,
+      //         mode: getpaymentmode(data.pay_mode),
+      //       });
+
+      //       if (res_wallet_trans) {
+      //         return res.status(200).json({
+      //           status: true,
+      //           message: "Club activity created.",
+      //           data: addactivity,
+      //         });
+      //       } else {
+      //         return res.status(200).json({
+      //           status: false,
+      //           message: "Oops something went wrong.",
+      //         });
+      //       }
+      //     } else {
+      //       return res.status(200).json({
+      //         status: false,
+      //         message: "Oops something went wrong.",
+      //         data: error,
+      //       });
+      //     }
+      //   } else {
+      //     return res.status(200).json({
+      //       status: false,
+      //       message: "User not found.",
+      //       data: error,
+      //     });
+      //   }
+      // } else {
+      //   return res.status(200).json({
+      //     status: false,
+      //     message: "Oops something went wrong.",
+      //     data: error,
+      //   });
+      // }
     } catch (error) {
       return res.status(200).json({
         status: false,
@@ -154,6 +494,8 @@ class ActivitiesMasterController {
       });
     }
   };
+
+  addactivitymaster = async () => {};
 
   get_user_activity = async (req, res) => {
     const data = req.body;
