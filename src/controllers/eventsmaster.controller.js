@@ -3,7 +3,7 @@ const config = require("../../config/config");
 const db = require("../models");
 
 //TABLES DECLARATION
-const activities_master = db.activities_master;
+const events_master = db.events_master;
 const event_transaction = db.event_transaction;
 const wallet_trans = db.wallet_trans;
 const users = db.users;
@@ -15,7 +15,7 @@ class EventsMasterController {
   get_event_master = async (req, res) => {
     const data = req.body;
     try {
-      await activities_master
+      await events_master
         .findAll({
           where: data.user_id
             ? { user_id: data.user_id, status: 1 }
@@ -67,6 +67,7 @@ class EventsMasterController {
     };
 
     const data = req.body;
+    console.log(data);
     try {
       const fromDate = new Date().toISOString();
 

@@ -28,12 +28,18 @@ class ActivitiesMasterController {
             let filtered = res_user.filter(function (el) {
               return el.end_date >= new Date().toISOString();
             });
-
-            return res.status(200).json({
-              status: true,
-              message: "Club activity found.",
-              data: filtered,
-            });
+            if (filtered.length > 0) {
+              return res.status(200).json({
+                status: true,
+                message: "Club activity found.",
+                data: filtered,
+              });
+            } else {
+              return res.status(200).json({
+                status: false,
+                message: "Club activity not found.",
+              });
+            }
           } else {
             return res.status(200).json({
               status: false,
