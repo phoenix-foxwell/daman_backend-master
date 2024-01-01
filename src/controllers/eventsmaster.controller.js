@@ -67,266 +67,86 @@ class EventsMasterController {
     };
 
     const data = req.body;
-    console.log(data);
+
+    function parseDate(dateString) {
+      const parts = dateString.split("-");
+      return new Date(parts[2], parts[1] - 1, parseInt(parts[0]) + 1);
+    }
+
+    function parseDateHours(dateString) {
+      const [datePart, timePart, period] = dateString.split(" ");
+      const [day, month, year] = datePart.split("-");
+      const [hours, minutes] = timePart.split(":");
+
+      let adjustedHours = parseInt(hours);
+
+      if (period === "PM") {
+        adjustedHours += 12;
+      }
+
+      const localDate = new Date(
+        Date.UTC(year, month - 1, day, adjustedHours, parseInt(minutes))
+      );
+      return localDate;
+    }
+
+    const duration = data.duraction;
+    const dayshours = data.daysHours;
+    const startDate =
+      dayshours == 0
+        ? parseDate(data.start_datetime)
+        : parseDateHours(data.start_datetime);
+
+    let endDate;
+
+    // duration in days
+    if (dayshours == 0) {
+      endDate = new Date(startDate.getTime() + duration * 24 * 60 * 60 * 1000);
+    } else {
+      endDate = new Date(startDate.getTime() + duration * 60 * 60 * 1000);
+    }
+
     try {
-      const fromDate = new Date().toISOString();
-
-      // Assuming data.validity is the number of days
-      const validityInDays = data.validity;
-      const validityEndDate = new Date(
-        new Date().getTime() + validityInDays * 24 * 60 * 60 * 1000
-      ).toISOString();
-
       const res_user = await users.findOne({
         where: { id: req.body.user_id },
       });
 
       if (res_user) {
-        // check if user is guest
-        if (data.membership_type.toLowerCase() == "guest") {
-          if (data.transaction_details.toLowerCase() == "wallet") {
-            //check user select wallet
-            if (data.amount > res_user.dataValues.walletbalance) {
-              return res.status(200).json({
-                status: false,
-                message: "Insufficient wallet balance.",
-                data: error,
-              });
-            } else {
-              // main code for gest start from here
+        const findevent = await event_transaction.findOne({
+          where: {
+            user_id: data.user_id,
+            status: 1,
+            event_venue: data.event_venue,
+          },
+          order: [["created_at", "DESC"]],
+        });
 
-              const addevent = await event_transaction.create({
-                user_id: data.user_id,
-                amount: data.amount,
-                from_date: fromDate,
-                to_date: fromDate,
-                event_name: data.event_name,
-                pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
-                transaction_details: data.transaction_details,
-                transaction_date: new Date().toISOString(),
-                pay_status: data.pay_status,
-                remark: data.remark,
-                status: 1,
-                updated_by: data.updated_user_id,
-              });
-
-              if (addevent) {
-                const user_wallet = await users.update(
-                  {
-                    walletbalance:
-                      res_user.dataValues.walletbalance - data.amount,
-                  },
-                  { where: { id: data.user_id }, limit: 1 }
-                );
-
-                if (user_wallet) {
-                  const res_wallet_trans = await wallet_trans.create({
-                    user_id: data.user_id,
-                    amount: data.amount,
-                    credit_debit: 2,
-                    machine_id: 1,
-                    mode: getpaymentmode(data.pay_mode),
-                  });
-
-                  if (res_wallet_trans) {
-                    return res.status(200).json({
-                      status: true,
-                      message: "Club event created.",
-                      data: addevent,
-                    });
-                  } else {
-                    return res.status(200).json({
-                      status: false,
-                      message: "Oops something went wrong.",
-                    });
-                  }
-                } else {
-                  return res.status(200).json({
-                    status: false,
-                    message: "Oops something went wrong.",
-                  });
-                }
-              } else {
-                return res.status(200).json({
-                  status: false,
-                  message: "Oops something went wrong.",
-                  data: error,
-                });
-              }
-              // main code for gest end start from here
-            }
-          } else {
-            // if user donsen't select wallet
-
-            const addevent = await event_transaction.create({
-              user_id: data.user_id,
-              amount: data.amount,
-              from_date: fromDate,
-              to_date: fromDate,
-              event_name: data.event_name,
-              pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
-              transaction_details: data.transaction_details,
-              transaction_date: new Date().toISOString(),
-              pay_status: data.pay_status,
-              remark: data.remark,
-              status: 1,
-              updated_by: data.updated_user_id,
+        if (findevent) {
+          if (findevent.dataValues.to_date > new Date().toISOString()) {
+            return res.status(200).json({
+              status: false,
+              message: "User event active.",
             });
-            if (addevent) {
-              return res.status(200).json({
-                status: true,
-                message: "Club event created for guest.",
-                data: addevent,
-              });
-            } else {
-              return res.status(200).json({
-                status: false,
-                message: "Oops something went wrong.",
-                data: error,
-              });
-            }
-          }
-        } else {
-          // if user is not guest
-          const findevent = await event_transaction.findOne({
-            where: {
-              user_id: data.user_id,
-              status: 1,
-              event_name: data.event_name,
-            },
-            order: [["created_at", "DESC"]],
-          });
-
-          if (findevent) {
-            if (findevent.dataValues.to_date > new Date().toISOString()) {
-              return res.status(200).json({
-                status: false,
-                message: "User event active.",
-              });
-            } else {
-              if (data.transaction_details.toLowerCase() == "wallet") {
-                //check user select wallet
-                if (data.amount > res_user.dataValues.walletbalance) {
-                  return res.status(200).json({
-                    status: false,
-                    message: "Insufficient wallet balance.",
-                  });
-                } else {
-                  // main code for gest start from here
-                  const addevent = await event_transaction.create({
-                    user_id: data.user_id,
-                    amount: data.amount,
-                    from_date: fromDate,
-                    to_date: validityEndDate,
-                    event_name: data.event_name,
-                    pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
-                    transaction_details: data.transaction_details,
-                    transaction_date: new Date().toISOString(),
-                    pay_status: data.pay_status,
-                    remark: data.remark,
-                    status: 1,
-                    updated_by: data.updated_user_id,
-                  });
-
-                  if (addevent) {
-                    const user_wallet = await users.update(
-                      {
-                        walletbalance:
-                          res_user.dataValues.walletbalance - data.amount,
-                      },
-                      { where: { id: data.user_id }, limit: 1 }
-                    );
-
-                    if (user_wallet) {
-                      const res_wallet_trans = await wallet_trans.create({
-                        user_id: data.user_id,
-                        amount: data.amount,
-                        credit_debit: 2,
-                        machine_id: 1,
-                        mode: getpaymentmode(data.pay_mode),
-                      });
-
-                      if (res_wallet_trans) {
-                        return res.status(200).json({
-                          status: true,
-                          message: "Club event created.",
-                          data: addevent,
-                        });
-                      } else {
-                        return res.status(200).json({
-                          status: false,
-                          message: "Oops something went wrong.",
-                        });
-                      }
-                    } else {
-                      return res.status(200).json({
-                        status: false,
-                        message: "Oops something went wrong.",
-                      });
-                    }
-                  } else {
-                    return res.status(200).json({
-                      status: false,
-                      message: "Oops something went wrong.",
-                      data: error,
-                    });
-                  }
-                  // main code for gest end start from here
-                }
-              } else {
-                // if user donsen't select wallet
-
-                const addevent = await event_transaction.create({
-                  user_id: data.user_id,
-                  amount: data.amount,
-                  from_date: fromDate,
-                  to_date: validityEndDate,
-                  event_name: data.event_name,
-                  pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
-                  transaction_details: data.transaction_details,
-                  transaction_date: new Date().toISOString(),
-                  pay_status: data.pay_status,
-                  remark: data.remark,
-                  status: 1,
-                  updated_by: data.updated_user_id,
-                });
-                if (addevent) {
-                  return res.status(200).json({
-                    status: true,
-                    message: "Club event created for guest.",
-                    data: addevent,
-                  });
-                } else {
-                  return res.status(200).json({
-                    status: false,
-                    message: "Oops something went wrong.",
-                    data: error,
-                  });
-                }
-              }
-            }
           } else {
-            if (data.transaction_details.toLowerCase() == "wallet") {
+            if (data.pay_mode.toLowerCase() == "wallet") {
               //check user select wallet
               if (data.amount > res_user.dataValues.walletbalance) {
                 return res.status(200).json({
                   status: false,
                   message: "Insufficient wallet balance.",
-                  data: error,
                 });
               } else {
                 // main code for gest start from here
                 const addevent = await event_transaction.create({
                   user_id: data.user_id,
                   amount: data.amount,
-                  from_date: fromDate,
-                  to_date: validityEndDate,
-                  event_name: data.event_name,
+                  start_date: startDate.toISOString(),
+                  end_date: endDate.toISOString(),
+                  event_venue: data.event_venue,
                   pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
-                  transaction_details: data.transaction_details,
-                  transaction_date: new Date().toISOString(),
                   pay_status: data.pay_status,
-                  remark: data.remark,
+                  pay_ref: "SoMeThInG fOr NoW",
+                  event_description: data.event_description,
                   status: 1,
                   updated_by: data.updated_user_id,
                 });
@@ -371,7 +191,7 @@ class EventsMasterController {
                   return res.status(200).json({
                     status: false,
                     message: "Oops something went wrong.",
-                    data: error,
+                    data: {},
                   });
                 }
                 // main code for gest end start from here
@@ -382,14 +202,13 @@ class EventsMasterController {
               const addevent = await event_transaction.create({
                 user_id: data.user_id,
                 amount: data.amount,
-                from_date: fromDate,
-                to_date: validityEndDate,
-                event_name: data.event_name,
+                start_date: startDate.toISOString(),
+                end_date: endDate.toISOString(),
+                event_venue: data.event_venue,
                 pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
-                transaction_details: data.transaction_details,
-                transaction_date: new Date().toISOString(),
                 pay_status: data.pay_status,
-                remark: data.remark,
+                pay_ref: "SoMeThInG fOr NoW",
+                event_description: data.event_description,
                 status: 1,
                 updated_by: data.updated_user_id,
               });
@@ -403,9 +222,109 @@ class EventsMasterController {
                 return res.status(200).json({
                   status: false,
                   message: "Oops something went wrong.",
-                  data: error,
+                  data: {},
                 });
               }
+            }
+          }
+        } else {
+          if (data.pay_mode.toLowerCase() == "wallet") {
+            //check user select wallet
+            if (data.amount > res_user.dataValues.walletbalance) {
+              return res.status(200).json({
+                status: false,
+                message: "Insufficient wallet balance.",
+                data: {},
+              });
+            } else {
+              // main code for gest start from here
+              const addevent = await event_transaction.create({
+                user_id: data.user_id,
+                amount: data.amount,
+                start_date: startDate.toISOString(),
+                end_date: endDate.toISOString(),
+                event_venue: data.event_venue,
+                pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
+                pay_status: data.pay_status,
+                pay_ref: "SoMeThInG fOr NoW",
+                event_description: data.event_description,
+                status: 1,
+                updated_by: data.updated_user_id,
+              });
+
+              if (addevent) {
+                const user_wallet = await users.update(
+                  {
+                    walletbalance:
+                      res_user.dataValues.walletbalance - data.amount,
+                  },
+                  { where: { id: data.user_id }, limit: 1 }
+                );
+
+                if (user_wallet) {
+                  const res_wallet_trans = await wallet_trans.create({
+                    user_id: data.user_id,
+                    amount: data.amount,
+                    credit_debit: 2,
+                    machine_id: 1,
+                    mode: getpaymentmode(data.pay_mode),
+                  });
+
+                  if (res_wallet_trans) {
+                    return res.status(200).json({
+                      status: true,
+                      message: "Club event created.",
+                      data: addevent,
+                    });
+                  } else {
+                    return res.status(200).json({
+                      status: false,
+                      message: "Oops something went wrong.",
+                    });
+                  }
+                } else {
+                  return res.status(200).json({
+                    status: false,
+                    message: "Oops something went wrong.",
+                  });
+                }
+              } else {
+                return res.status(200).json({
+                  status: false,
+                  message: "Oops something went wrong.",
+                  data: {},
+                });
+              }
+              // main code for gest end start from here
+            }
+          } else {
+            // if user donsen't select wallet
+            const addevent = await event_transaction.create({
+              user_id: data.user_id,
+              amount: data.amount,
+              start_date: startDate.toISOString(),
+              end_date: endDate.toISOString(),
+              event_venue: data.event_venue,
+              pay_mode: getpaymentmode(data.pay_mode.toLowerCase()),
+              pay_status: data.pay_status,
+              pay_ref: "SoMeThInG fOr NoW",
+              event_description: data.event_description,
+              status: 1,
+              updated_by: data.updated_user_id,
+            });
+
+            if (addevent) {
+              return res.status(200).json({
+                status: true,
+                message: "Club event created for guest.",
+                data: addevent,
+              });
+            } else {
+              return res.status(200).json({
+                status: false,
+                message: "Oops something went wrong.",
+                data: {},
+              });
             }
           }
         }
@@ -413,10 +332,11 @@ class EventsMasterController {
         return res.status(200).json({
           status: false,
           message: "User not found.",
-          data: error,
+          data: {},
         });
       }
     } catch (error) {
+      console.log(error);
       return res.status(200).json({
         status: false,
         message: "Oops something went wrong.",
