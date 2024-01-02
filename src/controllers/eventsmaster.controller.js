@@ -375,6 +375,37 @@ class EventsMasterController {
       });
     }
   };
+
+  get_name_event = async (req, res) => {
+    const data = req.body;
+    try {
+      const event_data = await event_transaction.findAll({
+        where: {
+          event_venue: data.event_venue,
+          status: 1,
+        },
+      });
+
+      if (event_data) {
+        return res.status(200).json({
+          status: true,
+          message: "Club event found.",
+          data: event_data,
+        });
+      } else {
+        return res.status(200).json({
+          status: false,
+          message: "No evnets found.",
+        });
+      }
+    } catch (error) {
+      return res.status(200).json({
+        status: false,
+        message: "Oops something went wrong.",
+        data: error,
+      });
+    }
+  };
 }
 
 module.exports = new EventsMasterController();

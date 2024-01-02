@@ -13,30 +13,6 @@ const users = db.users;
 const wallet_trans = db.wallet_trans;
 const room_events = db.room_events;
 
-// .query(
-//   `SELECT sum(quantity) as total,room_id FROM tbl_room_reservations where from_date ='${from_date}' or to_date = '${to_date}' group by room_id`,
-//   { type: db.sequelize.QueryTypes.SELECT }
-// )
-
-//USER CONTROLLER
-
-// let isavailable = get_room_reservation.find(
-//   (item) => item.room_id == element.id
-// );
-
-// if (
-//   typeof isavailable != "undefined" &&
-//   isavailable.total == element.qty
-// ) {
-//   continue;
-// }
-// if (
-//   typeof isavailable != "undefined" &&
-//   isavailable.total < element.qty
-// ) {
-//   element.qty = element.qty - isavailable.total;
-// }
-
 class RoomsController {
   get_room_list = async (req, res) => {
     try {
@@ -82,8 +58,14 @@ class RoomsController {
         }
 
         if (room_array.length > 0) {
-          const query = `SELECT * FROM tbl_room_events WHERE status = 1 AND (start_date BETWEEN "${from_date}" AND "${to_date}"
-            OR end_date BETWEEN "${from_date}" AND "${to_date}");`;
+          // const query = `SELECT * FROM tbl_room_events WHERE status = 1 AND (start_date BETWEEN "${from_date}" AND "${to_date}"
+          //   OR end_date BETWEEN "${from_date}" AND "${to_date}");`;
+
+          const query = `SELECT *
+            FROM tbl_room_events
+            WHERE status = 1 AND 
+            "${from_date}" >= DATE(start_date) AND 
+            "${from_date}" < DATE(end_date);`;
           const get_room_events = await db.sequelize.query(query, {
             type: db.sequelize.QueryTypes.SELECT,
           });
@@ -313,6 +295,83 @@ class RoomsController {
             });
           }
         });
+    } catch (error) {
+      return res.status(200).json({
+        status: false,
+        message: "Oops something went wrong.",
+        data: error,
+      });
+    }
+  };
+
+  get_room_price_list = async (req, res) => {
+    try {
+      let from_date = req.body.from_date
+        ? req.body.from_date
+        : moment().format("YYYY-MM-DD");
+      let to_date = req.body.to_date
+        ? req.body.to_date
+        : moment().format("YYYY-MM-DD");
+
+      const query = `SELECT * FROM tbl_rooms WHERE id = 1;`;
+      const get_room = await db.sequelize.query(query, {
+        type: db.sequelize.QueryTypes.SELECT,
+      });
+
+      if (get_room.length > 0) {
+        let price_room_list = [];
+        for (let i = 0; i < get_room.length; i++) {
+          price_room_list.push(get_room[i]);
+          price_room_list[0].from_date = from_date;
+          price_room_list[0].to_date = to_date;
+        }
+        console.log(price_room_list);
+        return res.status(200).json({
+          status: true,
+          message: "Rooms price found.",
+          data: price_room_list,
+        });
+      } else {
+        return res.status(200).json({
+          status: false,
+          message: "No Rooms price found.",
+          data: [],
+        });
+      }
+    } catch (error) {
+      return res.status(200).json({
+        status: false,
+        message: "Oops something went wrong.",
+        data: error,
+      });
+    }
+  };
+
+  add_room_price_list = async (req, res) => {
+    const data = req.body;
+
+    const startDate = moment(data.from_date).format("YYYY-MM-DD h:mm:ss");
+    const endDate = moment(data.to_date).format("YYYY-MM-DD  h:mm:ss");
+
+    try {
+      const addevent = await room_events.create({
+        member_price: parseInt(data.member_price),
+        nonmember_price: parseInt(data.non_member_price),
+        start_date: startDate,
+        end_date: endDate,
+        status: 1,
+      });
+      if (addevent) {
+        return res.status(200).json({
+          status: true,
+          message: "Room price added.",
+        });
+      } else {
+        return res.status(200).json({
+          status: false,
+          message: "Room price not added.",
+        });
+      }
     } catch (error) {
       return res.status(200).json({
         status: false,

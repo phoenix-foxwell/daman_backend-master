@@ -19,5 +19,10 @@ router.post(
   authMiddleware.isAuthenticate,
   EventsMasterController.get_user_event
 );
+router.post(
+  "/get_name_event",
+  authMiddleware.isAuthenticate,
+  EventsMasterController.get_name_event
+);
 
 module.exports = router;

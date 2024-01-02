@@ -34,5 +34,15 @@ router.post(
   authMiddleware.isAuthenticate,
   RoomsController.update_room_status
 );
+router.post(
+  "/get_room_price_list",
+  authMiddleware.isAuthenticate,
+  RoomsController.get_room_price_list
+);
+router.post(
+  "/add_room_price_list",
+  authMiddleware.isAuthenticate,
+  RoomsController.add_room_price_list
+);
 
 module.exports = router;
