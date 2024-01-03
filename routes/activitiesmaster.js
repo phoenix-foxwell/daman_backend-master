@@ -19,5 +19,10 @@ router.post(
   authMiddleware.isAuthenticate,
   ActivitiesMasterController.get_user_activity
 );
+router.post(
+  "/get_all_activity",
+  authMiddleware.isAuthenticate,
+  ActivitiesMasterController.get_all_activity
+);
 
 module.exports = router;

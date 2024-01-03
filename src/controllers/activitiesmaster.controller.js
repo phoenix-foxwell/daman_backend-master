@@ -521,7 +521,37 @@ class ActivitiesMasterController {
           } else {
             return res.status(200).json({
               status: false,
-              message: "Guest not found.",
+              message: "Activity not found.",
+            });
+          }
+        });
+    } catch (error) {
+      return res.status(200).json({
+        status: false,
+        message: "Oops something went wrong.",
+        data: error,
+      });
+    }
+  };
+  get_all_activity = async (req, res) => {
+    try {
+      await activity_transaction
+        .findAll({
+          where: {
+            status: 1,
+          },
+        })
+        .then(async (res_user) => {
+          if (res_user) {
+            return res.status(200).json({
+              status: true,
+              message: "Club activity found.",
+              data: res_user,
+            });
+          } else {
+            return res.status(200).json({
+              status: false,
+              message: "Activity not found.",
             });
           }
         });
