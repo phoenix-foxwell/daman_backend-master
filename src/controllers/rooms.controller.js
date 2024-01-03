@@ -24,7 +24,7 @@ class RoomsController {
         : moment().format("YYYY-MM-DD");
 
       const get_room_reservation = await db.sequelize.query(
-        `SELECT * FROM tbl_room_reservations where from_date ='${from_date}' or to_date = '${to_date}' group by room_id`,
+        `SELECT * FROM tbl_room_reservations where from_date ='${from_date}' OR to_date = '${to_date}'`,
         { type: db.sequelize.QueryTypes.SELECT }
       );
 
@@ -58,9 +58,6 @@ class RoomsController {
         }
 
         if (room_array.length > 0) {
-          // const query = `SELECT * FROM tbl_room_events WHERE status = 1 AND (start_date BETWEEN "${from_date}" AND "${to_date}"
-          //   OR end_date BETWEEN "${from_date}" AND "${to_date}");`;
-
           const query = `SELECT *
             FROM tbl_room_events
             WHERE status = 1 AND 
