@@ -366,6 +366,35 @@ class UsersController {
       });
     }
   };
+  get_user_from_card = async (req, res) => {
+    try {
+      let data = req.body;
+      console.log(data);
+      await users
+        .findAll({ where: { card_serial_no: data.card_no } })
+        .then(async (res_user) => {
+          if (res_user && res_user.length > 0) {
+            return res.status(200).json({
+              status: true,
+              message: "Users found.",
+              data: res_user,
+            });
+          } else {
+            return res.status(200).json({
+              status: false,
+              message: "Users not found.",
+            });
+          }
+        });
+    } catch (error) {
+      console.log(error);
+      return res.status(200).json({
+        status: false,
+        message: "Oops something went wrong.",
+        data: error,
+      });
+    }
+  };
 
   tw_get_user = async (req, res) => {
     let data = req.body;
