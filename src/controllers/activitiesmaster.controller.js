@@ -504,27 +504,25 @@ class ActivitiesMasterController {
   get_user_activity = async (req, res) => {
     const data = req.body;
     try {
-      await activity_transaction
-        .findAll({
-          where: {
-            user_id: data.user_id,
-            status: 1,
-          },
-        })
-        .then(async (res_user) => {
-          if (res_user) {
-            return res.status(200).json({
-              status: true,
-              message: "Club activity found.",
-              data: res_user,
-            });
-          } else {
-            return res.status(200).json({
-              status: false,
-              message: "Activity not found.",
-            });
-          }
+      const res_user = await activity_transaction.findAll({
+        where: {
+          user_id: data.user_id,
+          status: 1,
+        },
+      });
+
+      if (res_user) {
+        return res.status(200).json({
+          status: true,
+          message: "Club activity found.",
+          data: res_user,
         });
+      } else {
+        return res.status(200).json({
+          status: false,
+          message: "Activity not found.",
+        });
+      }
     } catch (error) {
       return res.status(200).json({
         status: false,
@@ -535,26 +533,26 @@ class ActivitiesMasterController {
   };
   get_all_activity = async (req, res) => {
     try {
-      await activity_transaction
-        .findAll({
-          where: {
-            status: 1,
-          },
-        })
-        .then(async (res_user) => {
-          if (res_user) {
-            return res.status(200).json({
-              status: true,
-              message: "Club activity found.",
-              data: res_user,
-            });
-          } else {
-            return res.status(200).json({
-              status: false,
-              message: "Activity not found.",
-            });
-          }
+      const query =
+        "SELECT tbl_activity_transactions.*, tbl_users.mobile_no, tbl_users.name FROM `tbl_activity_transactions` LEFT JOIN tbl_users ON tbl_activity_transactions.user_id = tbl_users.id;";
+
+      const res_user = await db.sequelize.query(query, {
+        type: db.sequelize.QueryTypes.SELECT,
+      });
+
+
+      if (res_user) {
+        return res.status(200).json({
+          status: true,
+          message: "Club activity found.",
+          data: res_user,
         });
+      } else {
+        return res.status(200).json({
+          status: false,
+          message: "Activity not found.",
+        });
+      }
     } catch (error) {
       return res.status(200).json({
         status: false,

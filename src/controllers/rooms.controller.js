@@ -167,6 +167,7 @@ class RoomsController {
   manager_room_reservation = async (req, res) => {
     try {
       let data = req.body;
+      console.log(data);
       let user_data = await users.findOne({ where: { id: data.user_id } });
       await db.sequelize
         .query(
@@ -175,9 +176,10 @@ class RoomsController {
         )
         .then(async (resp) => {
           if (resp) {
-            if (user_data.dataValues.walletbalance >= data.price) {
-              await room_reservation.create(req.body).then(async (resps) => {
-                if (data.transaction_details.toLowerCase() == "wallet") {
+            if (data.transaction_details.toLowerCase() == "wallet") {
+              if (user_data.dataValues.walletbalance >= data.price) {
+                const new_room_data = await room_reservation.create(req.body);
+                if (new_room_data) {
                   await wallet_trans.create({
                     user_id: user_data.dataValues.id,
                     amount: data.price,
@@ -185,17 +187,36 @@ class RoomsController {
                     machine_id: 2,
                     mode: 4,
                   });
+
+                  return res.status(200).json({
+                    status: true,
+                    message: "Room booked.",
+                  });
+                } else {
+                  return res.status(200).json({
+                    status: false,
+                    message: "Something want wrong unable to book room.",
+                  });
                 }
+              } else {
+                return res.status(200).json({
+                  status: false,
+                  message: "Please Recharge your wallet.",
+                });
+              }
+            } else {
+              const new_room_data = await room_reservation.create(req.body);
+              if (new_room_data) {
                 return res.status(200).json({
                   status: true,
                   message: "Room booked.",
                 });
-              });
-            } else {
-              return res.status(200).json({
-                status: false,
-                message: "Please Recharge your wallet.",
-              });
+              } else {
+                return res.status(200).json({
+                  status: false,
+                  message: "Something want wrong unable to book room.",
+                });
+              }
             }
           } else {
             return res.status(200).json({

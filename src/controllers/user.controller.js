@@ -425,7 +425,50 @@ class UsersController {
         });
       }
     } catch (error) {
-      console.log(error);
+      return res.status(200).json({
+        status: false,
+        message: "Oops something went wrong.",
+        data: error,
+      });
+    }
+  };
+
+  register_login_nonmember = async (req, res) => {
+    const data = req.body;
+
+    try {
+      const res_user = await users.findOne({
+        attributes: ["id", "mobile_no"],
+        where: { mobile_no: data.mobile_no },
+      });
+      if (res_user) {
+        return res.status(200).json({
+          status: true,
+          message: "User Found Login successfully",
+          data: res_user.dataValues,
+        });
+      } else {
+        let user_create = await users.create({
+          mobile_no: data.mobile_no,
+          alt_mobile_no: 0,
+          status: 1,
+          role: "ROOMGUEST",
+        });
+        if (user_create) {
+          return res.status(200).json({
+            status: true,
+            message: "User Created successfully",
+            data: user_create,
+          });
+        } else {
+          return res.status(200).json({
+            status: false,
+            message: "Oops something went wrong.Unable to create user.",
+            data: error,
+          });
+        }
+      }
+    } catch (error) {
       return res.status(200).json({
         status: false,
         message: "Oops something went wrong.",

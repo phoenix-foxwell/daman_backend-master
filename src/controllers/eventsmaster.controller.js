@@ -408,11 +408,13 @@ class EventsMasterController {
   };
   get_all_event = async (req, res) => {
     try {
-      const event_data = await event_transaction.findAll({
-        where: {
-          status: 1,
-        },
+      const query =
+        "SELECT tbl_event_transactions.*, tbl_users.mobile_no, tbl_users.name FROM `tbl_event_transactions` LEFT JOIN tbl_users ON tbl_event_transactions.user_id = tbl_users.id;";
+
+      const event_data = await db.sequelize.query(query, {
+        type: db.sequelize.QueryTypes.SELECT,
       });
+
 
       if (event_data) {
         return res.status(200).json({

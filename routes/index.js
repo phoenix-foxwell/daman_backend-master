@@ -8,10 +8,7 @@ router.post(
   "/admin/get_user_from_mobile",
   UsersController.get_user_from_mobile
 );
-router.post(
-  "/admin/get_user_from_card",
-  UsersController.get_user_from_card
-);
+router.post("/admin/get_user_from_card", UsersController.get_user_from_card);
 router.post("/admin/send_otp", UsersController.send_otp);
 router.post("/admin/verify_otp", UsersController.verify_otp);
 router.post("/admin/register_user", UsersController.register_user);
@@ -40,6 +37,8 @@ router.post(
   authMiddleware.isAuthenticate,
   UsersController.get_requested_users
 );
+
+router.post("/admin/register_login_nonmember", UsersController.register_login_nonmember);
 
 router.post("/admin/tw_get_user", UsersController.tw_get_user);
 

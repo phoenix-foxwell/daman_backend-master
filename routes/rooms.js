@@ -45,4 +45,11 @@ router.post(
   RoomsController.add_room_price_list
 );
 
+router.post("/get_room_list_un", RoomsController.get_room_list);
+router.post("/room_reservation_un", RoomsController.manager_room_reservation);
+router.post(
+  "/get_room_reservation_un",
+  RoomsController.get_room_reservation
+);
+
 module.exports = router;
